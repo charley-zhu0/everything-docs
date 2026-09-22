@@ -519,13 +519,38 @@ spawn "升级测试框架并修好挂掉的用例"
 
 ### 10.2 插件
 
-插件市场已有数百个社区插件，本质是带 `herdr-plugin.toml` 清单的可执行包（Bash/JS/Lua/Rust 都行），用同一套 CLI/socket API，没有独立 SDK。典型用途：新 worktree 自动装依赖、agent blocked 时发通知、开部署面板弹窗等。
+插件本质是带 `herdr-plugin.toml` 清单的可执行包（Bash/JS/Lua/Rust 都行），没有独立 SDK——**整个 herdr CLI 就是插件的 API**。典型用途：新 worktree 自动装依赖、agent blocked 时发通知、开部署面板弹窗等。
+
+市场在 [herdr.dev/plugins](https://herdr.dev/plugins)，本质是 GitHub 上打了 `herdr-plugin` 标签的仓库的**自动索引**（每 30 分钟刷新一次；2026-09-22 检索时已有 1200+ 插件），不是人工审核的应用商店：
 
 ```bash
 herdr plugin install ogulcancelik/herdr-plugin-examples/worktree-bootstrap
 ```
 
-> **插件用你的权限跑本地命令，装前先读源码**——当成对待任何来路不明的可执行文件。
+先会管理插件的四条命令，再谈装：
+
+```bash
+herdr plugin list                      # 已装了什么
+herdr plugin action list --plugin ID   # 这个插件提供哪些动作
+herdr plugin action invoke ID.ACTION   # 手动触发一个动作
+herdr plugin log list --plugin ID      # 排查插件问题看日志
+```
+
+#### 初学者推荐（多篇第三方评测一致点名；star 数为 2026-08 时点数据）
+
+| 插件 | 解决什么痛点 | 安装 |
+|---|---|---|
+| **herdr-plus**（253★，呼声最高） | 每开一个项目都要手工搭一遍布局。**Projects**：一个 TOML 文件定义整个 workspace（tabs、panes、工作目录、启动命令），一键拉起，还能直接开成 git worktree；**Quick Actions**：模糊搜索一键跑常用脚本 | `herdr plugin install cloudmanic/herdr-plus` |
+| **herdr-spreader** | tmuxp 老用户的迁移路径：YAML 声明式布局文件，支持嵌套分屏、每 pane 工作目录/环境变量、`wait_for`（等某 pane 输出匹配后再开下一个） | `herdr plugin install yuk1ty/herdr-spreader` |
+| **Herdr Board** | 终端里直接开看板（Kanban），卡片式管理手头任务 | 市场搜 "board" |
+| **Agent Quota** | 一个视图看 Claude / Gemini / Codex 各烧了多少额度 | 市场搜 "quota" |
+| **Herdr Resurrect** | 把配置好的 spaces/tabs 存成模板，跨机器迁移或分享给别人 | 市场搜 "resurrect" |
+
+生态里其他按 star 数的热门（2026-08）：**herdr-reviewr**（496★，diff 侧栏代码审查，可评论、打回 agent 的工作）、**herdr-remote**（278★，菜单栏/手机/Telegram 遥控）、**herdr-sidebar**（167★，VS Code 风格文件树 + git 侧栏）。逛市场还可以看精选目录 [awesome-herdr](https://github.com/yigitkonur/awesome-herdr)。
+
+> **插件用你的权限跑本地命令，装前先读源码**——当成对待任何来路不明的可执行文件。市场无人审核，装前四步：打开仓库 → 读 `herdr-plugin.toml` → 看它声明的命令跑的脚本源码 → 确认信任作者。
+>
+> 新手节奏：**先只装 herdr-plus**（治「每次开项目重复搭布局」这个最大痛点），用顺了再按需加审查/额度/遥控类。
 
 ---
 
@@ -573,6 +598,8 @@ herdr agent explain <名字> --verbose   为什么是这个状态
 herdr integration install claude       装集成（精确状态+重启续聊）
 herdr worktree create --cwd ... --branch ...   worktree 即 workspace
 herdr machine add <主机> --label ...   多机一窗（0.9+）
+herdr plugin install <owner/repo>      装插件（市场 herdr.dev/plugins）
+herdr plugin list                      已装插件
 herdr server reload-config             配置热重载
 herdr --skill                          输出喂给 agent 的使用说明
 ```
@@ -632,4 +659,5 @@ herdr 不管文件隔离，这是设计边界。解法：给任务划清范围�
 ---
 
 *生成于 2026-09-22。基于 herdr v0.9.1（2026-09-16 发布；GitHub herdrdev/herdr，Apache-2.0，40k+ stars）的官方文档、README 与 Flavio Copes 深度评测（均经 Tavily 检索核对）。*
+*10.2 节插件推荐另据 2026-09-22 的 Tavily 检索（Josh Finnie 博客、Developers Digest 生态分析、flaviocopes 插件指南、YouTube 教程）；插件数与 star 数均为检索时点数据。*
 *本机（Ubuntu 22.04）截至 2026-09-22 尚未安装；安装后请在第 2.3 节补记版本、路径与补全配置。*
