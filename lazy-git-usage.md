@@ -3,6 +3,7 @@
 > 目标：不追求炫技，读完就能把 lazygit 当主力 git 工具用。
 > 全文讲法：大白话 + 图 + 例子。所有按键都可以 `cd` 到任意一个 git 仓库里照着敲。
 > 本机已装好 lazygit v0.65.1（路径 `~/.local/bin/lazygit`），跳过安装可直接从第 3 节开练。
+> 本机已配置中文界面（`gui.language: 'zh-CN'`），并已接入 yazi：在 yazi 里按 `g` `i` 可直接唤起（见 [`yazi-usage.md`](./yazi-usage.md) 第 7.6 节）。
 
 ---
 
@@ -324,6 +325,7 @@ lazygit              # 敲这一个词就进来了
 
 ```yaml
 gui:
+  language: 'zh-CN'           # 界面语言：auto 跟随系统 locale，也可设 zh-TW/en/ja 等（本机已设 zh-CN）
   showRandomTip: false        # 关掉每次启动的随机小贴士（有点吵）
   border: rounded             # 边框圆角，好看
   theme:
@@ -420,3 +422,4 @@ z / Ctrl+z  撤销 / 重做       x         打开动作菜单
 ---
 
 *生成于 2026-09-22，基于 lazygit v0.65.1（本机 `~/.local/bin/lazygit` 实测安装）；键位以 lazygit 内置帮助（`?`）与官方文档为准。*
+*同日更新：配置中文界面（`gui.language: 'zh-CN'`，写入 `~/.config/lazygit/config.yml`）；打通 yazi ↔ lazygit 集成（yazi 内 `g` `i` 唤起，插件 Lil-Dank/lazygit）。*

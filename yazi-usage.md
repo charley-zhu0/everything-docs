@@ -47,6 +47,8 @@ yazi 是 Rust 写的终端文件管理器，最大卖点：**所有操作异步�
 | `yazi` + `ya` v26.9.1 | `~/.local/bin/`（已在 PATH） | musl 静态编译版 |
 | zsh 补全 | `~/.oh-my-zsh/custom/completions/_y{azi,a}` | Tab 补全命令参数 |
 | `y` 包装函数 | `~/.zshrc` 末尾 | 退出时 shell 自动 cd（见第 3 节） |
+| `fzf` v0.74.4 | `~/.local/bin/`（已在 PATH） | `z` 模糊查找用，2026-09-22 装 |
+| `zoxide` v0.10.0 | `~/.local/bin/`（已在 PATH） | `Z` 目录跳转用，2026-09-22 装 |
 
 > **踩过的坑（换机器时必看）**：官方最新版预编译包在本机跑不起来——它要求 GLIBC ≥ 2.39，Ubuntu 22.04 只有 2.35。解决办法是下载 **musl 静态版**（文件名带 `musl` 的那个），静态链接不挑 glibc，任何 Linux 都能跑。服务器上的老系统同理。
 >
@@ -117,8 +119,8 @@ y         # 推荐用这个启动（包装函数），退出后 shell 停在你�
 | `gh` | 回 home | goto home |
 | `g` + `空格` | 交互式输路径跳转 | — |
 | `g` `t` | 打开回收站 | goto trash |
-| `z` | 模糊搜索跳转（需要装 fzf） | — |
-| `Z` | 智能跳目录（需要装 zoxide，会记住你去过的目录） | — |
+| `z` | fzf 模糊查找：回车跳到选中的文件，目录则直接进入 | 已装好，直接用 |
+| `Z` | zoxide 智能跳目录：按去过的目录模糊匹配；你在 yazi 里逛过的目录会自动记进它的库 | 已装好，直接用 |
 
 ### 4.3 两个好习惯
 
@@ -239,6 +241,7 @@ y         # 推荐用这个启动（包装函数），退出后 shell 停在你�
 | `t` `t` | 新建标签（当前目录） |
 | `1`–`9` | 切到第 N 个标签 |
 | `[` / `]` | 上一个 / 下一个标签 |
+| `Ctrl+c` | 关闭当前标签（只剩一个时退出 yazi） |
 
 > 典型用法：一个 tab 在 `src/` 挑文件，一个 tab 开着 `dist/` 收文件，两边来回切着搬。
 
@@ -251,6 +254,12 @@ y         # 推荐用这个启动（包装函数），退出后 shell 停在你�
 
 > 想让文本文件用别的编辑器打开：`export EDITOR=vim` 写进 zshrc 即可（yazi 默认回退到 vi）。
 
+### 7.6 `g` `i`：yazi 里直接开 lazygit
+
+浏览到某个 git 仓库时按 `g` `i`，当前目录直接唤起 lazygit（插件 Lil-Dank/lazygit 已装好）：暂存、提交、推送全在熟悉的界面里做，`q` 退出 lazygit 后 yazi 自动刷新显示最新文件状态。不在 git 仓库里按了也没事，会弹个「Not in a git directory」提醒。
+
+> lazygit 的完整用法见姊妹篇 [`lazy-git-usage.md`](./lazy-git-usage.md)。
+
 ---
 
 ## 8. 可选依赖与本机现状
@@ -262,8 +271,8 @@ yazi 核心功能零依赖就能用（浏览、增删改、文本预览都行）
 | `rg`（ripgrep） | 按内容搜文件 | `S` | ✅ 已有 |
 | `jq` | JSON 预览格式化 | 预览栏 | ✅ 已有 |
 | `fd` | 按文件名递归搜索 | `s` | ❌ 未装 |
-| `fzf` | 模糊跳转 | `z` | ❌ 未装 |
-| `zoxide` | 智能目录跳转 | `Z` | ❌ 未装 |
+| `fzf` | 模糊跳转 | `z` | ✅ 已装（`~/.local/bin`，免 sudo） |
+| `zoxide` | 智能目录跳转 | `Z` | ✅ 已装（`~/.local/bin`，免 sudo） |
 | `7-Zip`（7zz） | 压缩包预览/解压 | 预览、右键解压 | ❌ 未装 |
 | `poppler`（pdftotext） | PDF 预览 | 预览栏 | ❌ 未装 |
 | `ffmpeg` | 视频缩略图 | 预览栏 | ❌ 未装 |
@@ -271,12 +280,12 @@ yazi 核心功能零依赖就能用（浏览、增删改、文本预览都行）
 想补齐（需要 sudo，可选）：
 
 ```bash
-sudo apt install fd-find fzf p7zip-full poppler-utils ffmpeg
+sudo apt install fd-find p7zip-full poppler-utils ffmpeg   # fzf/zoxide 已装好，不用管
 sudo ln -s $(which fdfind) /usr/local/bin/fd   # Ubuntu 22.04 的 fd 命令叫 fdfind，yazi 认 fd
-# zoxide 建议按官方脚本装：curl -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 ```
 
-> **不用 sudo 的替代**：`rg`、`jq` 已覆盖最常用的两个。fd/fzf/zoxide 装不上也不影响主流程，`/`、`f`、`H` 够用了。
+> **不用 sudo 的替代**：`rg`、`jq`、`fzf`、`zoxide` 都已就位。fd 装不上也不影响主流程，`/`、`f`、`H`、`z` 够用了。
+> 注：yazi 26.x 起官方的 fzf/zoxide 插件已内置进主程序，默认键位 `z`/`Z` 开箱即用——只要二进制在 PATH 里就行，**不需要** `ya pkg add`。
 > 排障神器：`ya env` 会打印环境和每个依赖/配置的检测结果，哪个缺了一目了然。
 
 ---
@@ -300,7 +309,8 @@ tab_size = 4
 
 另外两个文件按需再加：
 
-- `keymap.toml`：改/加按键。官方建议的方式是覆盖式追加，比如把 `Ctrl+f` 从翻页改成别的——初学阶段不用动。
+- `keymap.toml`：改/加按键，覆盖式追加不破坏默认。本机已有一例：`g` `i` 绑定 lazygit 插件（见 7.6）。
+- `init.lua`：启动时跑的 Lua 脚本。本机已有一行：`require("zoxide"):setup { update_db = true }`，让 zoxide 记录你在 yazi 里逛过的目录。
 - `theme.toml` + flavors：换主题配色。锦上添花，最后再玩。
 
 > 修改配置后 yazi 下次启动自动生效；正在跑的实例按 `q` 退出重进即可。
@@ -325,6 +335,7 @@ h / l       上级/进入        j / k      下/上
 gg / G      顶/底            Ctrl+d/u   翻半页
 H / L       历史 后退/前进    gh         回 home
 J / K       滚动预览栏        g 空格     输路径跳转
+z / Z       fzf 模糊找 / zoxide 跳目录
 ```
 
 ### 操作
@@ -335,6 +346,7 @@ y / x / p   复制/剪切/粘贴    P         粘贴覆盖
 d / D       进回收站/永久删    g t       打开回收站
 a / r       新建/重命名       .         切换隐藏文件
 c c         复制完整路径       c f       复制文件名
+g i         yazi 里开 lazygit
 ```
 
 ### 找与看
@@ -343,8 +355,9 @@ c c         复制完整路径       c f       复制文件名
 f           当前目录过滤      /  n N     查找并跳转
 s / S       搜文件名/搜内容   Tab        spot 文件详情
 , s / , m   按大小/时间排序    m s/m m    列表显示大小/时间
+t t / 1-9   新标签/切标签      Ctrl+c    关标签
 w           任务队列          ; / :      跑 shell 命令
-t t / 1-9   新标签/切标签      o / O      打开/选方式打开
+o / O       打开/选方式打开
 ```
 
 ---
@@ -384,3 +397,4 @@ t t / 1-9   新标签/切标签      o / O      打开/选方式打开
 ---
 
 *生成于 2026-09-22。yazi v26.9.1，键位取自官方默认 keymap（v26.9.1 tag），基于 Tavily 检索的官方文档与社区实践。*
+*同日更新：接入 fzf v0.74.4 / zoxide v0.10.0（均免 sudo 装于 `~/.local/bin`，插件为 26.x 内置，键位 `z`/`Z`）；新增 lazygit 集成（`g` `i`）。*
