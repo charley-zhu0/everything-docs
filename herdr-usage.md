@@ -2,7 +2,7 @@
 
 > 目标：不追求全功能，读完就能用 herdr 同时带着几个 AI coding agent 干活，合上终端也不丢工作。
 > 全文讲法：大白话 + 图 + 例子。所有命令都可以开个测试目录照着敲。
-> 本机（Ubuntu 22.04）截至 2026-09-22 **尚未安装**，先看第 2 节；装好后记得回第 2 节补记版本。
+> 本机（Ubuntu 22.04）2026-09-22 **已安装 v0.9.1**（补记见第 2.3 节）。
 > 姊妹篇：[`lazy-git-usage.md`](./lazy-git-usage.md)（agent 产出的 diff 用 lazygit 审最舒服）、[`yazi-usage.md`](./yazi-usage.md)。herdr 键位不是 vim 风格，是 tmux 式前缀键 + 鼠标，学习成本反而更低。
 
 ---
@@ -98,7 +98,7 @@ herdr status                # 看客户端和 server 各自的版本
 
 本机 Ubuntu 22.04，glibc 2.35。参考 yazi 的教训（见 [`yazi-usage.md`](./yazi-usage.md) 第 2 节）：新版预编译二进制可能要求更高的 glibc。**若 `herdr --version` 报 `GLIBC_x.xx not found`**，去 [releases 页](https://github.com/herdrdev/herdr/releases) 找静态/musl 构建或改用 mise 安装。
 
-装好后在此补记：版本 ____，安装路径 ____，补全是否配置 ____。（2026-09-22 检查：未安装）
+装好后在此补记：版本 v0.9.1，安装路径 `~/.local/bin/herdr`，补全已配置（2026-09-22，`~/.oh-my-zsh/custom/completions/_herdr`）。集成同日装好：claude (v10)、codex (v8)。
 
 ---
 
@@ -660,4 +660,4 @@ herdr 不管文件隔离，这是设计边界。解法：给任务划清范围�
 
 *生成于 2026-09-22。基于 herdr v0.9.1（2026-09-16 发布；GitHub herdrdev/herdr，Apache-2.0，40k+ stars）的官方文档、README 与 Flavio Copes 深度评测（均经 Tavily 检索核对）。*
 *10.2 节插件推荐另据 2026-09-22 的 Tavily 检索（Josh Finnie 博客、Developers Digest 生态分析、flaviocopes 插件指南、YouTube 教程）；插件数与 star 数均为检索时点数据。*
-*本机（Ubuntu 22.04）截至 2026-09-22 尚未安装；安装后请在第 2.3 节补记版本、路径与补全配置。*
+*本机（Ubuntu 22.04）2026-09-22 已装 v0.9.1，claude/codex 集成与 zsh 补全已配置；补记见第 2.3 节。*
